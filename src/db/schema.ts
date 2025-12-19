@@ -12,19 +12,20 @@ export const usersTable = pgTable('users', {
 });
 
 export const usersRelations = relations(usersTable, ({ many }) => ({
-  notes: many(notes),
+  notes: many(notesTable),
 }));
 
-export const notes = pgTable('notes', {
+export const notesTable = pgTable('notes', {
   id: text()
     .primaryKey()
     .$defaultFn(() => createId()),
+  content: text().notNull(),
   user_id: text('user_id').references(() => usersTable.id),
 });
 
-export const notesRelations = relations(notes, ({ one }) => ({
+export const notesRelations = relations(notesTable, ({ one }) => ({
   users: one(usersTable, {
-    fields: [notes.user_id],
+    fields: [notesTable.user_id],
     references: [usersTable.id],
   }),
 }));
